@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Controller Test</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .test-section {
+      margin: 20px;
+      padding: 20px;
+      background: #f0f0f0;
+      border-radius: 8px;
+    }
+    .test-button {
+      margin: 10px 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-section">
+    <h1>App Controller Test Page</h1>
+    <p>This page tests the App controller and error handling functionality.</p>
+    
+    <div>
+      <button class="test-button" onclick="testStorageError()">Test Storage Error</button>
+      <button class="test-button" onclick="testQuotaError()">Test Quota Error</button>
+      <button class="test-button" onclick="testSecurityError()">Test Security Error</button>
+      <button class="test-button" onclick="testStorageAvailable()">Check Storage Available</button>
+      <button class="test-button" onclick="testDismissBanner()">Test Dismiss Banner</button>
+    </div>
+    
+    <div id="test-results" style="margin-top: 20px; padding: 10px; background: white; border-radius: 4px;">
+      <h3>Test Results:</h3>
+      <div id="results-content">Click buttons above to test functionality</div>
+    </div>
+  </div>
+
+  <main class="dashboard">
+    <!-- Greeting Display Component -->
+    <section class="greeting-section">
+      <div class="greeting-container">
+        <div class="greeting-message">Good morning</div>
+        <div class="current-time">12:00 AM</div>
+        <div class="current-date">Monday, January 1, 2024</div>
+      </div>
+    </section>
+
+    <!-- Focus Timer Component -->
+    <section class="timer-section">
+      <div class="timer-container">
+        <div class="timer-display">25:00</div>
+        <div class="timer-controls">
+          <button class="btn-start">Start</button>
+          <button class="btn-stop">Stop</button>
+          <button class="btn-reset">Reset</button>
+        </div>
+        <div class="timer-status"></div>
+      </div>
+    </section>
+
+    <!-- Task Manager Component -->
+    <section class="task-section">
+      <div class="task-container">
+        <h2>Tasks</h2>
+        <div class="task-input-section">
+          <input type="text" class="task-input" placeholder="Add a new task..." aria-label="New task">
+          <button class="btn-add-task">Add</button>
+        </div>
+        <ul class="task-list"></ul>
+      </div>
+    </section>
+
+    <!-- Quick Links Manager Component -->
+    <section class="links-section">
+      <div class="links-container">
+        <h2>Quick Links</h2>
+        <div class="link-input-section">
+          <input type="text" class="link-name-input" placeholder="Link name" aria-label="Link name">
+          <input type="url" class="link-url-input" placeholder="https://example.com" aria-label="Link URL">
+          <button class="btn-add-link">Add Link</button>
+        </div>
+        <div class="links-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    function log(message) {
+      const resultsContent = document.getElementById('results-content');
+      const timestamp = new Date().toLocaleTimeString();
+      resultsContent.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+    }
+
+    function testStorageError() {
+      App.handleStorageError('test-component', 'This is a test error message.');
+      log('✓ Storage error triggered');
+    }
+
+    function testQuotaError() {
+      App.handleStorageError('tasks', 'Storage quota exceeded. Try deleting some items.');
+      log('✓ Quota error triggered');
+    }
+
+    function testSecurityError() {
+      App.handleStorageError('links', 'Storage access denied by browser settings.');
+      log('✓ Security error triggered');
+    }
+
+    function testStorageAvailable() {
+      const available = App.isStorageAvailable();
+      log(`✓ Storage available: ${available}`);
+    }
+
+    function testDismissBanner() {
+      log('✓ Click the × button on the error banner to test dismissal');
+    }
+
+    // Test Utils functions
+    window.addEventListener('DOMContentLoaded', function() {
+      log('✓ App initialized successfully');
+      log('✓ GreetingDisplay component loaded');
+      
+      // Test debounce
+      const debouncedFunc = Utils.debounce(() => {
+        log('✓ Debounced function executed');
+      }, 100);
+      
+      debouncedFunc();
+      debouncedFunc();
+      debouncedFunc(); // Only this one should execute after 100ms
+      
+      // Test safe storage operations
+      setTimeout(() => {
+        const testKey = 'test-key';
+        const testValue = { test: 'data', number: 42 };
+        
+        const setResult = Utils.safeStorageSet(testKey, testValue, 'test');
+        log(`✓ Safe storage set: ${setResult}`);
+        
+        const getValue = Utils.safeStorageGet(testKey);
+        log(`✓ Safe storage get: ${JSON.stringify(getValue)}`);
+        
+        Utils.safeStorageRemove(testKey, 'test');
+        log('✓ Safe storage remove completed');
+      }, 200);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskManager Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .test-results {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 5px;
+    }
+    .test-pass {
+      color: green;
+      font-weight: bold;
+    }
+    .test-fail {
+      color: red;
+      font-weight: bold;
+    }
+    .task-item {
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .task-item.completed {
+      background-color: #f8f9fa;
+    }
+    .task-item.completed .task-text {
+      text-decoration: line-through;
+      color: #6c757d;
+    }
+    .task-error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .input-error {
+      border-color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>TaskManager Component Test</h1>
+  
+  <div class="task-section">
+    <div class="task-container">
+      <h2>Tasks</h2>
+      <div class="task-input-section">
+        <input type="text" class="task-input" placeholder="Add a new task..." aria-label="New task">
+        <button class="btn-add-task">Add</button>
+      </div>
+      <ul class="task-list"></ul>
+    </div>
+  </div>
+
+  <div class="test-results">
+    <h3>Test Results:</h3>
+    <div id="test-output"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Wait for DOM to be ready
+    setTimeout(() => {
+      const output = document.getElementById('test-output');
+      const results = [];
+
+      function test(name, condition) {
+        const passed = condition();
+        results.push(`<div class="${passed ? 'test-pass' : 'test-fail'}">${passed ? '✓' : '✗'} ${name}</div>`);
+        return passed;
+      }
+
+      // Test 1: TaskManager is defined
+      test('TaskManager is defined', () => typeof TaskManager !== 'undefined');
+
+      // Test 2: TaskManager has required methods
+      test('TaskManager has init method', () => typeof TaskManager.init === 'function');
+      test('TaskManager has addTask method', () => typeof TaskManager.addTask === 'function');
+      test('TaskManager has editTask method', () => typeof TaskManager.editTask === 'function');
+      test('TaskManager has toggleTask method', () => typeof TaskManager.toggleTask === 'function');
+      test('TaskManager has deleteTask method', () => typeof TaskManager.deleteTask === 'function');
+      test('TaskManager has getTasks method', () => typeof TaskManager.getTasks === 'function');
+      test('TaskManager has validateTaskText method', () => typeof TaskManager.validateTaskText === 'function');
+
+      // Test 3: Validation works correctly
+      const validation1 = TaskManager.validateTaskText('Valid task');
+      test('Valid task text passes validation', () => validation1.valid === true);
+
+      const validation2 = TaskManager.validateTaskText('   ');
+      test('Empty task text fails validation', () => validation2.valid === false && validation2.error === 'Task cannot be empty');
+
+      const longText = 'a'.repeat(501);
+      const validation3 = TaskManager.validateTaskText(longText);
+      test('Task text over 500 chars fails validation', () => validation3.valid === false && validation3.error.includes('too long'));
+
+      // Test 4: Add task functionality
+      const initialCount = TaskManager.getTasks().length;
+      const newTask = TaskManager.addTask('Test task 1');
+      test('addTask returns a task object', () => newTask !== null && typeof newTask === 'object');
+      test('New task has correct properties', () => 
+        newTask && newTask.id && newTask.text === 'Test task 1' && newTask.completed === false && newTask.createdAt
+      );
+      test('Task count increased by 1', () => TaskManager.getTasks().length === initialCount + 1);
+
+      // Test 5: Edit task functionality
+      if (newTask) {
+        const editResult = TaskManager.editTask(newTask.id, 'Updated task text');
+        test('editTask returns success', () => editResult.success === true);
+        
+        const tasks = TaskManager.getTasks();
+        const editedTask = tasks.find(t => t.id === newTask.id);
+        test('Task text was updated', () => editedTask && editedTask.text === 'Updated task text');
+        test('Task completion status preserved', () => editedTask && editedTask.completed === false);
+      }
+
+      // Test 6: Toggle task functionality
+      if (newTask) {
+        TaskManager.toggleTask(newTask.id);
+        const tasks = TaskManager.getTasks();
+        const toggledTask = tasks.find(t => t.id === newTask.id);
+        test('Task completion status toggled to true', () => toggledTask && toggledTask.completed === true);
+        
+        TaskManager.toggleTask(newTask.id);
+        const tasks2 = TaskManager.getTasks();
+        const toggledTask2 = tasks2.find(t => t.id === newTask.id);
+        test('Task completion status toggled back to false', () => toggledTask2 && toggledTask2.completed === false);
+      }
+
+      // Test 7: Delete task functionality
+      if (newTask) {
+        const beforeDelete = TaskManager.getTasks().length;
+        TaskManager.deleteTask(newTask.id);
+        const afterDelete = TaskManager.getTasks().length;
+        test('Task was deleted', () => afterDelete === beforeDelete - 1);
+        
+        const tasks = TaskManager.getTasks();
+        const deletedTask = tasks.find(t => t.id === newTask.id);
+        test('Deleted task not in array', () => !deletedTask);
+      }
+
+      // Test 8: Local Storage integration
+      const testTask = TaskManager.addTask('Storage test task');
+      if (testTask) {
+        const saved = TaskManager.saveToStorage();
+        test('saveToStorage executes', () => saved !== undefined);
+        
+        // Check if data is in localStorage
+        const storedData = localStorage.getItem('productivity-dashboard-tasks');
+        test('Data saved to localStorage', () => storedData !== null);
+        
+        if (storedData) {
+          const parsed = JSON.parse(storedData);
+          test('Stored data is valid JSON array', () => Array.isArray(parsed));
+          test('Stored data contains test task', () => 
+            parsed.some(t => t.text === 'Storage test task')
+          );
+        }
+      }
+
+      // Test 9: DOM rendering
+      const taskList = document.querySelector('.task-list');
+      test('Task list element exists', () => taskList !== null);
+      test('Task list has child elements', () => taskList && taskList.children.length > 0);
+
+      // Display results
+      output.innerHTML = results.join('');
+      
+      const passCount = results.filter(r => r.includes('test-pass')).length;
+      const totalCount = results.length;
+      output.innerHTML += `<div style="margin-top: 20px; font-weight: bold;">Passed: ${passCount}/${totalCount}</div>`;
+    }, 500);
+  </script>
+</body>
+</html>

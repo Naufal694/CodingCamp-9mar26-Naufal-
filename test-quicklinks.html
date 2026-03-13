@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickLinksManager Test</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      padding: 2rem;
+    }
+    .test-section {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-section">
+    <h1>QuickLinksManager Component Test</h1>
+    
+    <!-- Quick Links Manager Component -->
+    <section class="links-section">
+      <div class="links-container">
+        <h2>Quick Links</h2>
+        <div class="link-input-section">
+          <input type="text" class="link-name-input" placeholder="Link name" aria-label="Link name">
+          <input type="url" class="link-url-input" placeholder="https://example.com" aria-label="Link URL">
+          <button class="btn-add-link">Add Link</button>
+        </div>
+        <div class="links-grid"></div>
+      </div>
+    </section>
+
+    <div style="margin-top: 2rem; padding: 1rem; background: #f0f0f0; border-radius: 8px;">
+      <h3>Test Instructions:</h3>
+      <ol>
+        <li>Add a link with name "GitHub" and URL "https://github.com"</li>
+        <li>Add a link with name "Google" and URL "https://google.com"</li>
+        <li>Try adding a link without a name (should show error)</li>
+        <li>Try adding a link without http:// or https:// (should show error)</li>
+        <li>Delete one of the links</li>
+        <li>Refresh the page - links should persist</li>
+        <li>Click a link - should open in new tab</li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Initialize only QuickLinksManager for testing
+    document.addEventListener('DOMContentLoaded', function() {
+      const linksSection = document.querySelector('.links-section');
+      if (linksSection && typeof QuickLinksManager !== 'undefined') {
+        QuickLinksManager.init(linksSection);
+        console.log('QuickLinksManager initialized');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusTimer Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .timer-display {
+      font-size: 48px;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .timer-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .timer-status {
+      text-align: center;
+      font-size: 24px;
+      color: green;
+      font-weight: bold;
+      margin: 20px 0;
+      display: none;
+    }
+    .test-results {
+      margin-top: 40px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 5px;
+    }
+    .test-pass {
+      color: green;
+      font-weight: bold;
+    }
+    .test-fail {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>FocusTimer Component Test</h1>
+  
+  <div class="timer-section">
+    <div class="timer-container">
+      <div class="timer-display">25:00</div>
+      <div class="timer-controls">
+        <button class="btn-start">Start</button>
+        <button class="btn-stop">Stop</button>
+        <button class="btn-reset">Reset</button>
+      </div>
+      <div class="timer-status"></div>
+    </div>
+  </div>
+
+  <div class="test-results">
+    <h3>Test Results:</h3>
+    <div id="test-output"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Wait for DOM to be ready
+    setTimeout(() => {
+      const output = document.getElementById('test-output');
+      const results = [];
+
+      function test(name, condition) {
+        const passed = condition();
+        results.push(`<div class="${passed ? 'test-pass' : 'test-fail'}">${passed ? '✓' : '✗'} ${name}</div>`);
+        return passed;
+      }
+
+      // Test 1: FocusTimer is defined
+      test('FocusTimer is defined', () => typeof FocusTimer !== 'undefined');
+
+      // Test 2: FocusTimer has required methods
+      test('FocusTimer has init method', () => typeof FocusTimer.init === 'function');
+      test('FocusTimer has destroy method', () => typeof FocusTimer.destroy === 'function');
+
+      // Test 3: Timer display shows initial value
+      const timerDisplay = document.querySelector('.timer-display');
+      test('Timer display element exists', () => timerDisplay !== null);
+      test('Timer displays 25:00 initially', () => timerDisplay && timerDisplay.textContent === '25:00');
+
+      // Test 4: Button states
+      const btnStart = document.querySelector('.btn-start');
+      const btnStop = document.querySelector('.btn-stop');
+      const btnReset = document.querySelector('.btn-reset');
+      
+      test('Start button exists and enabled', () => btnStart && !btnStart.disabled);
+      test('Stop button exists and disabled', () => btnStop && btnStop.disabled);
+      test('Reset button exists and disabled', () => btnReset && btnReset.disabled);
+
+      // Test 5: Start functionality
+      if (btnStart) {
+        btnStart.click();
+        setTimeout(() => {
+          test('Start button disabled after start', () => btnStart.disabled);
+          test('Stop button enabled after start', () => !btnStop.disabled);
+          test('Reset button enabled after start', () => !btnReset.disabled);
+          
+          // Wait for timer to tick
+          setTimeout(() => {
+            const displayText = timerDisplay.textContent;
+            test('Timer counts down (not 25:00)', () => displayText !== '25:00');
+            
+            // Test stop functionality
+            if (btnStop) {
+              btnStop.click();
+              const stoppedTime = timerDisplay.textContent;
+              
+              setTimeout(() => {
+                test('Timer preserves time after stop', () => timerDisplay.textContent === stoppedTime);
+                test('Start button enabled after stop', () => !btnStart.disabled);
+                test('Stop button disabled after stop', () => btnStop.disabled);
+                
+                // Test reset functionality
+                if (btnReset) {
+                  btnReset.click();
+                  test('Timer resets to 25:00', () => timerDisplay.textContent === '25:00');
+                  test('Reset button disabled after reset', () => btnReset.disabled);
+                  
+                  // Display final results
+                  output.innerHTML = results.join('');
+                  const passCount = results.filter(r => r.includes('test-pass')).length;
+                  const totalCount = results.length;
+                  output.innerHTML += `<div style="margin-top: 20px; font-weight: bold;">Passed: ${passCount}/${totalCount}</div>`;
+                }
+              }, 200);
+            }
+          }, 1200);
+        }, 200);
+      }
+    }, 500);
+  </script>
+</body>
+</html>

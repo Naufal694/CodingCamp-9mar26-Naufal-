@@ -1,0 +1,581 @@
+/* ===================================
+   CSS Variables
+   =================================== */
+:root {
+  /* ===================================
+   CSS Variables (Updated for Dark Mode)
+   =================================== */
+:root {
+  /* Colors - Light Mode (Default) */
+  --color-primary: #4a90e2;
+  --color-primary-dark: #357abd;
+  --color-secondary: #50c878;
+  --color-danger: #e74c3c;
+  --color-danger-dark: #c0392b;
+  --color-text: #333333;
+  --color-text-light: #666666;
+  --color-text-muted: #999999;
+  --color-background: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-border: #e1e4e8;
+  --color-completed: #95a5a6;
+  /* ... sisa variabel spacing dan typography tetap sama ... */
+}
+
+/* MODIFIKASI: Variabel untuk Dark Mode */
+body.dark-mode {
+  --color-text: #f0f0f0;
+  --color-text-light: #cccccc;
+  --color-text-muted: #888888;
+  --color-background: #121212;
+  --color-surface: #1e1e1e;
+  --color-border: #333333;
+  --color-completed: #555555;
+}
+
+/* MODIFIKASI: Efek halus saat transisi tema */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+section {
+  transition: background-color 0.3s ease, box-shadow var(--transition-speed);
+}
+  /* Colors */
+ /* Colors */
+  --color-primary: #6c5ce7;
+  --color-primary-dark: #5a4bcf;
+  --color-secondary: #50c878;
+  --color-danger: #e17055;
+  --color-danger-dark: #c0392b;
+  --color-text: #2d3436;
+  --color-text-light: #666666;
+  --color-text-muted: #999999;
+  
+  /* INI YANG DIUBAH: Warna background menjadi ungu solid sesuai gambar */
+  --color-background: #715fc4; 
+  
+  --color-surface: #ffffff;
+  --color-border: #e1e4e8;
+  --color-completed: #95a5a6;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+  
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-xxl: 32px;
+  --font-size-display: 48px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  
+  /* Layout */
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --max-width: 1200px;
+  --transition-speed: 0.2s;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ===================================
+   Base Styles
+   =================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  min-height: 100vh;
+}
+
+/* ===================================
+   Dashboard Layout
+   =================================== */
+.dashboard {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+  grid-template-areas:
+    "greeting greeting"
+    "timer timer"
+    "tasks links";
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "greeting"
+      "timer"
+      "tasks"
+      "links";
+    padding: var(--spacing-md);
+    gap: var(--spacing-lg);
+  }
+}
+
+/* ===================================
+   Section Styles
+   =================================== */
+section {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-speed);
+}
+
+section:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.greeting-section {
+  grid-area: greeting;
+}
+
+.timer-section {
+  grid-area: timer;
+}
+
+.task-section {
+  grid-area: tasks;
+}
+
+.links-section {
+  grid-area: links;
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ===================================
+   Greeting Display Styles
+   =================================== */
+.greeting-container {
+  text-align: center;
+}
+
+.greeting-message {
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.current-time {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.current-date {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-light);
+}
+
+/* ===================================
+   Timer Styles
+   =================================== */
+.timer-container {
+  text-align: center;
+}
+
+.timer-display {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.timer-status {
+  font-size: var(--font-size-base);
+  color: var(--color-secondary);
+  min-height: 1.5em;
+}
+
+/* ===================================
+   Button Styles
+   =================================== */
+button {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  background-color: var(--color-primary);
+  color: white;
+}
+
+button:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-start,
+.btn-add-task,
+.btn-add-link {
+  background-color: var(--color-secondary);
+}
+
+.btn-start:hover,
+.btn-add-task:hover,
+.btn-add-link:hover {
+  background-color: #45b369;
+}
+
+.btn-stop {
+  background-color: var(--color-text-light);
+}
+
+.btn-stop:hover {
+  background-color: var(--color-text);
+}
+
+.btn-reset,
+.btn-delete-task,
+.btn-delete-link {
+  background-color: var(--color-danger);
+}
+
+.btn-reset:hover,
+.btn-delete-task:hover,
+.btn-delete-link:hover {
+  background-color: var(--color-danger-dark);
+}
+
+.btn-edit-task {
+  background-color: var(--color-primary);
+}
+
+.btn-edit-task:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* ===================================
+   Task Styles
+   =================================== */
+.task-input-section {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.task-input {
+  flex: 1;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  transition: border-color var(--transition-speed);
+}
+
+.task-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.task-list {
+  list-style: none;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-sm);
+  background-color: var(--color-surface);
+  transition: all var(--transition-speed);
+}
+
+.task-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.task-item.completed {
+  background-color: #f8f9fa;
+  border-color: var(--color-completed);
+}
+
+.task-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.task-text {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.task-item.completed .task-text {
+  text-decoration: line-through;
+  color: var(--color-completed);
+}
+
+.btn-edit-task,
+.btn-delete-task {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  flex-shrink: 0;
+}
+
+.task-error-message {
+  color: #dc3545;
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
+  display: none;
+}
+
+.input-error {
+  border-color: #dc3545 !important;
+}
+
+.task-edit-input {
+  flex: 1;
+  padding: var(--spacing-xs);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.btn-save-task,
+.btn-cancel-task {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  flex-shrink: 0;
+}
+
+/* ===================================
+   Quick Links Styles
+   =================================== */
+
+.link-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.link-name-input,
+.link-url-input {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  transition: border-color var(--transition-speed);
+}
+
+.link-name-input:focus,
+.link-url-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.link-item {
+  position: relative;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-md);
+  transition: all var(--transition-speed);
+  display: flex;
+  flex-direction: column;
+}
+
+.link-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.link-item a {
+  text-decoration: none;
+  color: var(--color-text);
+  display: block;
+  flex: 1;
+}
+
+.link-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  display: block;
+  word-break: break-word;
+}
+
+.btn-delete-link {
+  position: absolute;
+  top: var(--spacing-xs);
+  right: var(--spacing-xs);
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.link-error-message {
+  color: #dc3545;
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
+  display: none;
+}
+
+/* ===================================
+   Utility Classes
+   =================================== */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===================================
+   Error Banner Styles
+   =================================== */
+.error-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff3cd;
+  border-bottom: 2px solid #ffc107;
+  padding: var(--spacing-md) var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.error-message {
+  font-size: var(--font-size-sm);
+  color: #856404;
+  flex: 1;
+}
+
+.btn-dismiss-error {
+  background-color: transparent;
+  color: #856404;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.btn-dismiss-error:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Adjust dashboard padding when error banner is present */
+body:has(.error-banner) .dashboard {
+  padding-top: calc(var(--spacing-xl) + 60px);
+}
+
+@media (max-width: 768px) {
+  .error-banner {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  body:has(.error-banner) .dashboard {
+    padding-top: calc(var(--spacing-md) + 60px);
+  }
+}
